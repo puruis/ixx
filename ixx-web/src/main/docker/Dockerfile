@@ -1,4 +1,4 @@
-FROM frolvlad/alpine-oraclejdk8:slim
+FROM frolvlad/java:8
 VOLUME /tmp
 ADD ixx-web.jar app.jar
 RUN sh -c 'touch /app.jar'
