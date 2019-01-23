@@ -1,0 +1,35 @@
+<html>
+<head>
+    <title>菜单列表</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/layui/css/font-awesome.min.css}">
+    <script th:src="@{/layui/plugins/ztree/jquery.ztree.all.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/layui/plugins/ztree/css/metroStyle/metroStyle.css}">
+    <head th:include="include :: header"></head>
+</head>
+<body>
+<div class="layui-col-md6 layui-col-md-offset1 layui-anim layui-anim-up" style="text-align: center;">
+    <ul id="menuTree"></ul>
+</div>
+<div th:include="include :: footer"></div>
+<script  type="text/javascript" th:inline="none">
+    layui.use('tree', function(){
+        var $ = layui.jquery;
+        $.ajax({
+            url: '/menu/menuListTree2',
+            dataType: 'json',
+            success: function(data){
+                layui.tree({
+                    elem: '#menuTree' //传入元素选择器
+                    ,nodes:data.data
+                    ,click:function(node){
+                        parent.setMenuNameAndValue(node);
+                        closeWin();
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

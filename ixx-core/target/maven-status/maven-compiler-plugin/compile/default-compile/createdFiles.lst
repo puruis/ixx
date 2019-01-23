@@ -1,0 +1,8 @@
+com\ixx\util\HttpUtils.class
+com\ixx\util\HttpContextUtils.class
+com\ixx\util\MD5Utils.class
+com\ixx\util\PaiFileUploadUtils.class
+com\ixx\util\SpringContextHolder.class
+com\ixx\util\CreateNamePicture.class
+com\ixx\util\UserAgentUtil.class
+com\ixx\util\RequestInfoUtil.class

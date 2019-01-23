@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ixx.dao.MenuDao">
+
+    <select id="menuPermsByUserId" resultType="java.lang.String">
+        SELECT
+	perms
+FROM
+	l_menu m where id IN (
+		SELECT
+			menu_id
+		FROM
+			l_role_to_menu
+		WHERE
+			role_id IN (
+				SELECT
+					role_id
+				FROM
+					l_user_to_role
+				WHERE
+					user_id = #{id}
+			)
+			order by m.orders
+	)
+    </select>
+    <select id="queryMenuListByUserId" resultType="com.ixx.entity.sys.MenuDo">
+		SELECT
+	*
+FROM
+	l_menu m
+WHERE
+	m.id IN (
+		SELECT
+			menu_id
+		FROM
+			l_role_to_menu
+		WHERE
+			role_id IN (
+				SELECT
+					role_id
+				FROM
+					l_user_to_role
+				WHERE
+					user_id = (
+						SELECT
+							id
+						FROM
+							l_user
+						WHERE
+							id = #{id}
+					)
+			)
+	)
+	order by m.orders
+	</select>
+	<select id="queryMenuAll" resultType="com.ixx.entity.sys.MenuDo">
+		select * from l_menu
+		where 1=1
+		<if test="menuName != null and menuName !=''">
+			and menu_name like CONCAT('%',#{menuName},'%')
+		</if>
+		<if test="perms != null and perms !=''">
+			and perms like CONCAT('%',#{perms},'%')
+		</if>
+		<if test="url != null and url !=''">
+			and url like CONCAT('%',#{url},'%')
+		</if>
+		ORDER BY orders
+	</select>
+</mapper>

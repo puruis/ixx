@@ -1,0 +1,162 @@
+<html>
+<head>
+    <title>用户</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <head th:include="include :: header"></head>
+    <style>
+        .layui-table-cell{
+            height:50px;
+            line-height: 50px;
+        }
+        td{
+            padding-top: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="demoTable">
+    <div class="layui-form-item" style="margin-top: 10px;">
+        <div class="layui-input-normal">
+            <div class="layui-input-inline" style="width: 250px;">
+                <!--<button class="layui-btn" onclick="addPage('/dict/addPage')">-->
+                    <!--<i class="fa fa-plus">&nbsp;</i>增加-->
+                <!--</button>-->
+                <button class="layui-btn layui-btn-green" onclick="updateState('userTable','/batchDelete','id','NORMAL')">
+                    <i class="fa fa-check-square-o">&nbsp;</i>启用
+                </button>
+                <button class="layui-btn  layui-btn-danger" onclick="updateState('userTable','/batchDelete','id','DELETE')">
+                    <i class="fa fa-expeditedssl">&nbsp;</i>禁用
+                </button>
+            </div>
+            <form class="layui-form" action="">
+                <label class="layui-form-label">用户名:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" placeholder="请输入用户名" class="layui-input">
+                </div>
+                <label class="layui-form-label">用户昵称:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="nickName" placeholder="请输入用户昵称" class="layui-input">
+                </div>
+                <label class="layui-form-label">邮箱:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="email" placeholder="请输入邮箱" class="layui-input">
+                </div>
+            </form>
+                <button class="layui-btn search-btn">
+                    <i class="fa fa-search">&nbsp;</i>查询
+                </button>
+        </div>
+    </div>
+
+</div>
+<script type="text/html" id="dictBar">
+    <button class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius" lay-event="detail">详情</button>
+    <button class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius" lay-event="edit">编辑</button>
+    <button class="layui-btn layui-btn-sm layui-btn-warm layui-btn-radius" lay-event="assign">分配资源</button>
+</script>
+<table class="layui-hide layui-anim layui-anim-up" id="userTable" lay-filter="userTableFilter"></table>
+<div th:include="include :: footer"></div>
+<script th:inline="none">
+    var table;
+    var renderTable;
+    layui.use(['table','jquery','layer'], function(){
+        table = layui.table;
+        var layer = layui.layer;
+
+
+        layer.photos({
+            photos: '#layer-photos-user'
+            ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+        });
+
+        renderTable = function(){
+            table.render({
+                elem: '#userTable'
+                ,url:'/listData'
+                ,loading:true
+                ,title:'用户表'
+                ,text:'暂无数据'
+                ,loading:true,//url时，进度条显示
+                totalRow:false,//合计行
+                toolbar:true,//若需要“列显示隐藏”、“导出”、“打印”等功能，则必须开启该参数
+                defaultToolbar:['filter', 'print', 'exports']//['filter', 'print', 'exports'
+                ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                ,cols: [[
+                    {type:'checkbox', fixed: 'left'}
+                    ,{field:'userName', width:'7%', title: '用户名'}
+                    ,{field:'nickName', width:'10%', title: '用户昵称', sort: true,templet: function(d){
+                            return "<img class='layer-photos-user' id='layer-photos-user' layer-pid  src='"+d.photo+"' layer-src='"+d.photo+"'width='50px;' height='50px;' style='border-radius: 25px;'>&nbsp;&nbsp;&nbsp;"+d.nickName;
+                        }}
+                    ,{field:'email', width:'10%', title: '邮箱'}
+                    ,{field:'lastLoginTime', title: '最后一次登陆时间', width: '12%', minWidth: 100} //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                    ,{field:'loginCount', title: '登录次数', sort: true,with:'3%',templet:function(d){
+                            return "<span class='layui-badge layui-bg-orange' style='margin-top: 16px;'>"+d.loginCount+"</span>";
+                        }
+                     }
+                    ,{field:'createUser', title: '创建者', sort: true,with:'10%'}
+                    ,{field:'updateTime', title: '修改时间', sort: true,with:'10%'}
+                    ,{field:'updateUser', title: '修改人', sort: true,width:'10%'}
+                    ,{field:'delFlag', title: '状态', sort: true,width:'10%',templet: function(d){
+                        if(d.delFlag == 'NORMAL'){
+                            return "<input type='checkbox' checked='' name='close' lay-skin='switch' lay-text='ON|OFF' disabled>";
+                        }else{
+                            return "<input type='checkbox' name='close' lay-skin='switch' lay-text='ON|OFF' disabled>";
+                        }
+                        }}
+                        ,{fixed: 'right', title:'操作', toolbar: '#dictBar', width:'15%'}
+                ]]
+                ,page: true
+                ,id: 'userTable'
+            });
+        };
+        renderTable();
+        var $ = layui.$, active = {
+            reload: function(){
+                var name = $('#name');
+                var nickName = $('#nickName');
+                var email  = $('#email');
+
+                //执行重载
+                table.reload('userTable', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                            userName: name.val(),
+                            nickName: nickName.val(),
+                               email: email.val()
+
+                    }
+                });
+            }
+        };
+        //给搜索按钮添加事件
+        $(".search-btn").on('click',function(){
+            active.reload();
+        });
+
+        //监听行工具事件
+        table.on('tool(userTableFilter)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'detail'){
+                openNewWindow("/user/detail","详情",data.id);
+            } else if(obj.event === 'edit'){
+                openNewWindow("/user/edit","编辑",data.id);
+            }else if(obj.event == 'assign'){
+                var index = layer.open({
+                    type: 2,
+                    title: "分配资源",
+                    shadeClose: false,
+                    shade: [0.3, '#000'],
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['90%', '90%'],
+                    content: "/user/transfer?userId="+data.id
+                });
+            }
+        });
+    });
+
+
+</script>
+</body>
+</html>

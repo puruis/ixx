@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>用户角色穿梭</title>
+    <head th:include="include :: header"></head>
+</head>
+<body>
+    <div class="layui-container layui-text" style="margin-top: 15px;">
+        <div class="layui-btn-group">
+            <input type="hidden" th:value="${userDo.id}" id="userId">
+            <img th:src="${userDo.photo}" width="50px;" height="50px" style="border-radius: 25px;"/>
+            <button class="layui-btn right">保存数据</button>
+        </div>
+        <div id="root" class="layui-anim layui-anim-up"></div>
+        <div id="root1" class="layui-anim layui-anim-up"></div>
+    </div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<div th:include="include :: footer"></div>
+<script>
+
+layui.config({
+  base: '/module/transfer/'
+}).use(['transfer'],function () {
+    var transfer = layui.transfer,$ = layui.$;
+    //数据源
+    var data1 = [];
+    var data2 = [];
+    //表格列
+    var cols = [{type: 'checkbox', fixed: 'left'},{field: 'roleName', title: '角色名称', width: 80, sort: true},{field: 'roleRemk', title: '角色备注'},{field: 'createTime', title: '创建时间'}]
+    //表格配置文件
+    var tabConfig = {'page':true,'limit':10,'height':400}
+    var tb1;
+    $.ajax({
+        type: "POST",
+        url: '/role/queryRoleListByUserId',
+        data: {userId:$("#userId").val()},
+        dataType: "json",
+        success: function (result) {
+            data2 = result.data;
+            $.ajax({
+                type: "POST",
+                url: '/role/queryRoleListByUserIdExcludeOwned',
+                data: {userId:$("#userId").val()},
+                dataType: "json",
+                success: function (result) {
+                    data1 = result.data;
+                    tb1 = transfer.render({
+                        elem: "#root", //指定元素
+                        cols: cols, //表格列  支持layui数据表格所有配置
+                        data: [data1,data2], //[左表数据,右表数据[非必填]]
+                        tabConfig: tabConfig //表格配置项 支持layui数据表格所有配置
+                    })
+                }
+            });
+        }
+    });
+
+
+    //transfer.get(参数1:初始化返回值,参数2:获取数据[all,left,right,l,r],参数:指定数据字段)
+    //获取数据
+    $('.all').on('click',function () {
+        var data = transfer.get(tb1,'all');
+        layer.msg(JSON.stringify(data))
+    });
+    $('.left').on('click',function () {
+        var data = transfer.get(tb1,'left','id');
+        layer.msg(JSON.stringify(data))
+    });
+    $('.right').on('click',function () {
+        var data = transfer.get(tb1,'r');
+        pAjax('/user/saveTransfer',{json:JSON.stringify(data),userId:$("#userId").val()});
+        closeWin();
+    });
+})
+</script>
+</html>

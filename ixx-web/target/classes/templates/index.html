@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>@管理后台</title>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" media="screen"/>
+    <link rel="stylesheet" th:href="@{/layui/plugins/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/layui/plugins/layer/skin/default/layer.css}">
+    <link rel="stylesheet" th:href="@{/layui/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/layui/css/index.css}">
+    <link rel="stylesheet" th:href="@{/layui/common/css/cyStyle.css}">
+    <link rel="stylesheet" th:href="@{/layui/plugins/ContextJS/css/context.standalone.green.css}">
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">@管理后台</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <!--<ul class="layui-nav layui-layout-left">-->
+            <!--<li class="layui-nav-item layui-this"><a href="javascript:createMenu('/statics/json/layuiMenu.json');">layui组件</a>-->
+            <!--</li>-->
+            <!--<li class="layui-nav-item"><a href="javascript:createMenu('/statics/json/vueMenu.json');">vue组件</a></li>-->
+            <!--<li class="layui-nav-item">-->
+                <!--<a href="javascript:;">其它系统</a>-->
+                <!--<dl class="layui-nav-child">-->
+                    <!--<dd><a href="" target="_blank"></a></dd>-->
+                    <!--<dd><a href="" target="_blank"></a></dd>-->
+                    <!--<dd><a href="" target="_blank"></a></dd>-->
+                <!--</dl>-->
+            <!--</li>-->
+        <!--</ul>-->
+        <ul class="layui-nav layui-layout-right">
+            <!--<li class="layui-nav-item">-->
+                <!--<a href="javascript:reward();">捐赠作者</a>-->
+            <!--</li>-->
+            <li class="layui-nav-item">
+                <a href="javascript:lockScreen();"><i class="fa fa-lock"></i>锁屏</a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">通知<span class="layui-badge">9</span></a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;" th:text="${user.nickName}">
+                    <!--<img src="statics/images/index/head.jpg" class="layui-nav-img">-->
+                    chenyi
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:;" class="cy-page" data-url="/user/baseInfo">基本资料</a></dd>
+                    <dd><a href="javascript:;"  class="cy-page" data-url="/user/updatePassWordPage">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="javascript:;window.location.href='/loginOut'">退了</a></li>
+        </ul>
+    </div>
+    <div class="toggle-collapse"></div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <div class="layui-form component">
+                <div class="search-menu-back">
+                    <input type="text" placeholder="菜单名称 / url" value="" id="menuSearch" class="layui-input menu-search">
+                    <span class="menu-search-clear" style="display: none"><i class="layui-icon">&#x1006;</i>  </span>
+                </div>
+            </div>
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree">
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 1px;">
+            <div id="navTab" class="layui-tab layui-tab-brief" lay-allowClose="true" lay-filter="tabs">
+                <div class="layui-tab-left"><i class="layui-icon">&#xe65a;</i></div>
+                <ul class="layui-tab-title ">
+                    <!--<li class="layui-this main-tab" data-url="">我的主页</li>-->
+
+                </ul>
+                <div class="layui-tab-right"><i class="layui-icon">&#xe65b;</i></div>
+
+            </div>
+
+        </div>
+
+
+        <div id="main">
+            <iframe scrolling="yes" frameborder="0" class="cy-show"></iframe>
+        </div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © www.zpr.com
+    </div>
+</div>
+<script th:src="@{/layui/libs/jquery-1.10.2.min.js}"></script>
+<script th:src="@{/layui/plugins/ContextJS/js/context.js}"></script>
+<script th:src="@{/layui/plugins/layui/layui.js}"></script>
+<script th:src="@{/layui/plugins/layer/layer.js}"></script>
+<script th:src="@{/layui/common/js/whole/utils.js}"></script>
+<script th:src="@{/layui/common/js/whole/cyLayer.js}"></script>
+<script th:src="@{/layui/js/navTab.js}"></script>
+<script th:src="@{/utils/common.js}"></script>
+<script th:src="@{/layui/js/index.js}"></script>
+</body>
+</html>

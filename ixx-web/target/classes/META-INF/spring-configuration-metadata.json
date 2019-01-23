@@ -1,0 +1,44 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.ixx.conf.properties.RedisProperties",
+      "name": "redis",
+      "type": "com.ixx.conf.properties.RedisProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.ixx.conf.properties.RedisProperties",
+      "name": "redis.database",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.ixx.conf.properties.RedisProperties",
+      "defaultValue": 2592000,
+      "name": "redis.expire",
+      "description": "默认30天 = 2592000s",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.ixx.conf.properties.RedisProperties",
+      "name": "redis.host",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.ixx.conf.properties.RedisProperties",
+      "name": "redis.password",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.ixx.conf.properties.RedisProperties",
+      "name": "redis.port",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.ixx.conf.properties.RedisProperties",
+      "name": "redis.timeout",
+      "type": "java.time.Duration"
+    }
+  ]
+}

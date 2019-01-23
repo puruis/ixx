@@ -1,0 +1,144 @@
+<html>
+<head>
+    <title>菜单列表</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/layui/css/font-awesome.min.css}">
+    <script th:src="@{/layui/plugins/ztree/jquery.ztree.all.min.js}"></script>
+    <style>
+        .layui-layer-border{
+            top: 60px;
+        }
+    </style>
+    <head th:include="include :: header"></head>
+</head>
+<body>
+<div class="layui-col-md6 layui-col-md-offset1 layui-anim layui-anim-up layui-text">
+    <fieldset class="layui-elem-field layui-field-title"><legend>新增菜单</legend></fieldset>
+    <!-- 此扩展能递归渲染一个权限树，点击深层次节点，父级节点中没有被选中的节点会被自动选中，单独点击父节点，子节点会全部 选中/去选中 -->
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">上级菜单</label>
+            <div class="layui-input-block">
+                <span class="layui-btn" id="menuName"  onclick="openMenuTree()">根目录</span>
+                <input type="hidden" value="-1" id="menuValue" name="pid"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">名称:</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="menuName" placeholder="请输入名称" lay-verify="required"  lay-verType="tips" maxlength="20"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">URL:</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="menuUrl" placeholder="请输入URL" maxlength="50"   lay-verType="tips" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">类型:</label>
+            <div class="layui-input-block">
+                <select lay-filter="menuType" pSelect="menuType" class="pSelect" lay-verify="required"  lay-verType="tips" name="type" lay-search maxlength="20">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限标识:</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="perms" placeholder="请输入权限标识" maxlength="50" lay-verType="tips" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序:</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="tel" name="orders" placeholder="排序" maxlength="5" lay-verify="required|number"  lay-verType="tips"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图标:</label>
+            <div class="layui-input-block" id="icon">
+                <span onclick="selectIcon()" class="layui-btn layui-btn-warm" >选择图标</span>
+            </div>
+            <input class="layui-input" type="hidden" name="icon" id="icon_value"/>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" lay-filter="login" lay-submit="">提交</button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include :: footer"></div>
+<script  type="text/javascript" th:inline="none">
+    var form;
+    var layer;
+    var $;
+    layui.config({
+        base: "layui/js/"
+    }).use(['form', 'layer'], function () {
+        form = layui.form;
+            layer = layui.layer;
+            $ = layui.jquery;
+        //登录按钮事件
+        form.on("submit(login)", function (data) {
+            $.ajax({
+                type: "POST",
+                url: "/menu/saveMenu",
+                data: data.field,
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {//登录成功
+                        layer.msg(result.msg, {icon: 1});
+                        parent.renderTable('/menu/menuList');
+                        var index = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+                        parent.layer.close(index);
+                    } else {
+                        layer.msg(result.msg, {icon: 5});
+                    }
+                    return true;
+                }
+            });
+            return false;
+        })
+        scanSelTool();
+    });
+    var index;
+    function openMenuTree(){
+        index = layer.open({
+            type: 2,
+            title: '父级菜单',
+            shadeClose: false,
+            shade: [0.3, '#000'],
+            maxmin: false, //开启最大化最小化按钮
+            area: ['400px', '400px'],
+            content: '/menu/menuTree'
+        });
+    }
+    /**
+     * 上级 菜单 tree 选择 回调
+     * */
+    function setMenuNameAndValue(node){
+        $("#menuName").html(node.name);
+        $("#menuValue").val(node.id);
+        layer.close(index);
+    }
+
+    function selectIcon(){
+        index = openNewWindow('/menu/iconPage','图标选择');
+    }
+
+    /**
+     *  确认选择图标 回调
+     * @param _class
+     */
+    function confirmChoice(_class){
+        $("#icon").html('<i onclick="selectIcon()" class="' + _class + '" style="margin:30px;font-size: 48px;color:#009688">&nbsp;</i><div style="margin-left:30px;color:#009688">&lt;i class="'+_class+'"> &lt;/i></span></div>');
+        $("#icon_value").val(_class);
+        layer.close(index);
+    }
+
+
+</script>
+</body>
+</html>

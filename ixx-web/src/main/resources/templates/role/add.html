@@ -1,0 +1,113 @@
+<html>
+<head>
+    <title>角色-添加</title>
+    <!--layui ztree样式-->
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/layui/css/font-awesome.min.css}">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" th:href="@{/module/eleTree/eleTree.css}" media="all">
+    <script th:src="@{/layui/plugins/ztree/jquery.ztree.all.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/layui/plugins/ztree/css/metroStyle/metroStyle.css}">
+    <head th:include="include :: header"></head>
+</head>
+<body>
+<div class="layui-col-md6 layui-col-md-offset1 layui-anim layui-anim-up layui-text">
+    <fieldset class="layui-elem-field layui-field-title"><legend>新增角色</legend></fieldset>
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色名称</label>
+            <div class="layui-input-block">
+                <input class="layui-input" maxlength="20" type="text"  name="roleName" placeholder="请输入角色名称" lay-verify="required"  lay-verType="tips"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色备注</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" maxlength="50" name="roleRemk" placeholder="请输入角色备注" lay-verify="required"  lay-verType="tips"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <!--<div class="eleTree ele4" lay-filter="data4"></div>-->
+                <ul id="treeDemo" class="ztree"></ul>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" lay-filter="saveRole" lay-submit="">提交</button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include :: footer"></div>
+<script  type="text/javascript" th:inline="none">
+
+    var flag = false;
+    layui.use(['form', 'layer','jquery','table'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        var form = layui.form;
+
+        form.on("submit(saveRole)", function (data) {
+            var arr = getZtreeCheckIds();
+            data.field.menuId = JSON.stringify(arr);
+            if(!flag){
+                flag = true;
+                $.ajax({
+                    type: "POST",
+                    url: "/role/save",
+                    data: data.field,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.code == 0) {
+                            pAlert();
+                            //刷新列表
+                            parent.renderTable();
+                            closeWin();
+                        } else {
+                            pEoor();
+                        }
+                        return true;
+                    }
+                });
+            }
+            return false;
+        });
+
+        var setting = {
+            check: {
+                enable: true,
+                chkboxType:{ "Y" : "ps", "N" : "ps" }
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }
+        };
+
+        $.ajax({
+            type : "POST",
+            url : "/role/menuList",
+            success : function(data) {
+                $.fn.zTree.init($("#treeDemo"), setting, data.data);
+            }
+        });
+
+    });
+    function getZtreeCheckIds() {
+        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+        var nodes = treeObj.getCheckedNodes(true);
+        var arr = [];
+        for (var i = 0; i < nodes.length; i++) {
+            var obj  = new Obj();
+            obj.id = nodes[i].id;
+            arr[i] = obj;
+        }
+        return arr;
+    }
+</script>
+</body>
+</html>

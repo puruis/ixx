@@ -1,0 +1,116 @@
+<html>
+<head>
+    <title>登录日志</title>
+    <head th:include="include :: header"></head>
+</head>
+<body>
+<div class="demoTable">
+    <div class="layui-form-item" style="margin-top: 10px;">
+
+            <div class="layui-input-normal">
+                <form class="layui-form" action="">
+                    <label class="layui-form-label">用户名:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="userName" placeholder="请输入用户名" class="layui-input">
+                    </div>
+                    <label class="layui-form-label">登录地址:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="loginAddress" placeholder="请输入登录地址" class="layui-input">
+                    </div>
+                    <label class="layui-form-label">操作系统:</label>
+                    <div class="layui-input-inline">
+                        <select  pSelect="OS" class="pSelect" id="status" lay-search>
+                        </select>
+                    </div>
+                </form>
+                    <button class="layui-btn search-btn"  data-type="reload">
+                        <i class="fa fa-search">&nbsp;</i>查询
+                    </button>
+            </div>
+
+    </div>
+
+</div>
+<script type="text/html" id="roleBar">
+    <!--<button class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius" lay-event="detail">详情</button>-->
+</script>
+<table class="layui-hide layui-anim layui-anim-up" id="loginLogTable" lay-filter="loginLogTableFilter"></table>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<div th:include="include :: footer"></div>
+<script th:inline="none">
+    var table;
+    var form;
+    var renderTable;
+
+    layui.use(['table'], function(){
+        table = layui.table;
+        form = layui.form;
+        var $ = layui.jquery;
+        renderTable = function(){
+            table.render({
+                elem: '#loginLogTable'
+                ,url:'/loginLog/list'
+                ,title:'登录日志'
+                ,text:'暂无数据'
+                ,loading:true,//url时，进度条显示
+                totalRow:false,//合计行
+                toolbar:true,//若需要“列显示隐藏”、“导出”、“打印”等功能，则必须开启该参数
+                defaultToolbar:['filter', 'print', 'exports']//['filter', 'print', 'exports'
+                ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                ,cols: [[
+                     {type:'checkbox', fixed: 'left'}
+                    ,{field:'userName', width:150, title: '登录用户'}
+                    ,{field:'loginTime', width:200, title: '登录时间', sort: true}
+                    ,{field:'ip', title: 'Ip地址', sort: true}
+                    ,{field:'address', title: '登录地址', sort: true}
+                    ,{field:'operatingSys', title: '操作系统', sort: true}
+                    ,{field:'browser', title: '浏览器', sort: true}
+                    ,{fixed: 'right', title:'操作', toolbar: '#roleBar', width:'10%'}
+                ]]
+                ,page: true
+                ,id: 'loginLogTable'
+            });
+        };
+        renderTable();
+        var $ = layui.$, active = {
+            reload: function(){
+                var userName = $('#userName');
+                var loginAddress = $('#loginAddress');
+                var status  = $('#status');
+
+                //执行重载
+                table.reload('loginLogTable', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        userName: userName.val(),
+                        address: loginAddress.val(),
+                        operatingSys: status.val()
+                    }
+                });
+            }
+        };
+
+        //给搜索按钮添加事件
+        $(".search-btn").on('click',function(){
+            active.reload();
+        });
+
+        //监听行工具事件
+        // table.on('tool(loginLogTableFilter)', function(obj){
+        //     var data = obj.data;
+        //     if(obj.event === 'detail'){
+        //         openNewWindow("/role/detail","详情",data.id);
+        //     } else if(obj.event === 'edit'){
+        //         openNewWindow("/role/edit","编辑",data.id);
+        //     }
+        // });
+        //扫描 select 组件
+        scanSelTool();
+    });
+
+
+</script>
+</body>
+</html>

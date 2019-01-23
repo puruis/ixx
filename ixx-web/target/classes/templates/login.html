@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>登录--后台管理</title>
+    <link rel="stylesheet" th:href="@{/layui/plugins/layui/css/layui.css}" media="all" />
+    <link rel="stylesheet" th:href="@{/layui/css/login.css}" media="all" />
+    <link rel="stylesheet" th:href="@{/plugins/lizi/css/crowd.css}" media="all" />
+    <!--禁止嵌套,开发时打开该代码-->
+    <!--<script type="text/javascript">-->
+        <!--if(window !=top){-->
+            <!--top.location.href=location.href;-->
+        <!--}-->
+
+    <!--</script>-->
+</head>
+<body>
+<header>
+    <div class="bg">
+        <canvas id="display"></canvas>
+        <div id="blachole"></div>
+    </div>
+</header>
+<div class="login layui-anim layui-anim-up">
+    <h1>管理员登录</h1>
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <input class="layui-input" name="userName" placeholder="用户名" value="" lay-verify="required"  lay-verType="tips" type="text" autocomplete="off">
+        </div>
+        <div class="layui-form-item">
+            <input class="layui-input" name="passWord" placeholder="密码" value=""  lay-verify="required"   lay-verType="tips"  type="password" autocomplete="off">
+        </div>
+        <!--<div class="layui-form-item form_code">-->
+            <!--<input class="layui-input" style="width: 140px;" name="captcha" placeholder="验证码" lay-verify="required"   lay-verType="tips"  type="text" autocomplete="off">-->
+            <!--<div class="code"><img id="captcha" src="/layui/img/code.png" width="116" height="36" onclick="refreshCode(this)"></div>-->
+        <!--</div>-->
+        <button class="layui-btn login_btn" lay-submit="" lay-filter="login">登录</button>
+    </form>
+</div>
+<script type="text/javascript" th:src="@{/plugins/lizi/js/jquery.1.12.4.min.js}"></script>
+<script type="text/javascript" th:src="@{/plugins/lizi/js/constellation.js}"></script>
+<script type="text/javascript" th:src="@{/layui/plugins/layui/layui.js}"></script>
+<script>
+    layui.config({
+        base: "layui/js/"
+    }).use(['form', 'layer'], function () {
+        var form = layui.form,
+            layer = parent.layer === undefined ? layui.layer : parent.layer,
+            $ = layui.jquery;
+        //登录按钮事件
+        form.on("submit(login)", function (data) {
+            var index = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
+            $.ajax({
+                type: "POST",
+                url: "/ajaxLogin",
+                data: data.field,
+                dataType: "json",
+                success: function (result) {
+                    layer.closeAll(index);
+                    if (result.code == 0) {//登录成功
+                        parent.location.href = '/index';
+                    } else {
+                        layer.msg("账号或密码错误,请重试!", {icon: 5});
+                        refreshCode();
+                    }
+                    return true;
+                }
+            });
+            return false;
+        })
+    });
+    function refreshCode(){
+        var captcha = document.getElementById("captcha");
+        captcha.src = "/captcha.jpg?t=" + new Date().getTime();
+    }
+
+</script>
+<!--<script type="text/javascript" src="/layui/js/login.js"></script>-->
+</body>
+</html>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ixx.dao.RoleDao">
+
+	<select id="menuListIdByUserId" resultType="java.lang.String">
+		SELECT
+	distinct
+	menu_id
+FROM
+	l_role_to_menu
+WHERE
+	role_id IN (
+		SELECT
+			role_id
+		FROM
+			l_user_to_role
+		WHERE
+			user_id = #{userId}
+	)
+	</select>
+	<select id="menuListId" resultType="java.lang.String">
+		SELECT
+		  id
+		FROM
+		l_menu
+	</select>
+</mapper>

@@ -1,0 +1,129 @@
+<html>
+<head>
+    <title>用户基本信息</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/layui/css/font-awesome.min.css}">
+    <head th:include="include :: header"></head>
+</head>
+<body>
+<div class="layui-col-md3 layui-anim layui-anim-up layui-text" style="margin: 15px;">
+    <div class="layui-card">
+        <div class="layui-card-header"></div>
+        <div class="layui-card-body">
+            <div style="text-align: center;">
+                <div class="layui-upload-drag" id="photo" style="border-radius: 100px;">
+                    <img th:src="${user.photo}" width="100px;" height="100px;" style="border-radius: 25px;">
+                </div>
+                <h2 th:text="${user.nickName}" ></h2>
+                <div>
+                    <i class="layui-icon layui-icon-location"></i>
+                    <p th:text="${address.address}"></p>
+                </div>
+                <div>
+                    <p th:text="'登录次数:'+${user.loginCount}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layui-col-md8 layui-anim layui-anim-up layui-text" >
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <ul class="layui-tab-title">
+            <li class="layui-this">基本信息</li>
+            <li>计划中...</li>
+        </ul>
+        <div class="layui-tab-content" style="height: 100px;">
+            <div class="layui-card">
+                <div class="layui-card-header"></div>
+                <div class="layui-card-body">
+                    <div class="layui-tab-item layui-show">
+                        <form class="layui-form">
+                            <input type="hidden" th:value="${user.id}" id="userId" name="id">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">用户名称</label>
+                                <div class="layui-input-block" >
+                                    <input class="layui-input" th:value="${user.userName}" readonly style="background-color: #eee"/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">用户昵称</label>
+                                <div class="layui-input-block">
+                                    <input class="layui-input" maxlength="20" type="text"  th:value="${user.nickName}" name="nickName" id="nickName" placeholder="请输入用户昵称" lay-verify="required"  lay-verType="tips"/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">邮箱</label>
+                                <div class="layui-input-block">
+                                    <input class="layui-input" type="text" maxlength="50" name="email" th:value="${user.email}" placeholder="请输入邮箱" lay-verify="required"  lay-verType="tips"/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">状态</label>
+                                <div class="layui-input-block">
+                                    <input th:if="${user.delFlag.value} eq 0" checked type="checkbox"  name="delFlag" lay-skin="switch" lay-filter="delFlagFilter" lay-text="正常|禁用">
+                                    <input th:if="${user.delFlag.value} ne 0" type="checkbox"  name="delFlag" lay-skin="switch" lay-filter="delFlagFilter" lay-text="正常|禁用">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">注册时间</label>
+                                <div class="layui-input-block" >
+                                    <input class="layui-input" th:value="${#dates.format(user.createTime,'yyyy-MM-dd HH:mm:ss')}" readonly style="background-color: #eee"/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" type="submit" lay-filter="saveBaseInfo" lay-submit="">提交</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="layui-tab-item">计划中...</div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:include="include :: footer"></div>
+<script  type="text/javascript" th:inline="none">
+
+    layui.use(['form', 'layer','jquery','table','element','upload'], function () {
+        var layer = layui.layer;
+        var upload = layui.upload;
+        var $ = layui.jquery;
+        var form = layui.form;
+        var element = layui.element;
+        //让第一个文本框 获得焦点
+        $("#nickName").focus();
+        form.on("submit(saveBaseInfo)", function (data) {
+                $.ajax({
+                    type: "POST",
+                    url: "/user/saveUser",
+                    data: data.field,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.code == 0) {
+                            pAlert();
+                        } else {
+                            pEoor();
+                        }
+                        return true;
+                    }
+                });
+            return false;
+        });
+
+        //拖拽上传
+        upload.render({
+            elem: '#photo'
+            ,url: '/oss/paiUploadFile'
+            ,done: function(res){
+                console.log(res)
+            }
+        });
+    });
+</script>
+</body>
+</html>

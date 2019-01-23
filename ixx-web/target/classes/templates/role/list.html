@@ -1,0 +1,133 @@
+<html>
+<head>
+    <title>角色</title>
+    <head th:include="include :: header"></head>
+</head>
+<body>
+<div class="demoTable">
+    <div class="layui-form-item" style="margin-top: 10px;">
+        <div class="layui-input-normal">
+            <div class="layui-input-inline" style="width: 250px;">
+                <button class="layui-btn" onclick="addPage('/role/addPage')">
+                    <i class="fa fa-plus">&nbsp;</i>增加
+                </button>
+                <button class="layui-btn layui-btn-green" onclick="updateState('roleTable','/role/batchDelete','id','NORMAL')">
+                    <i class="fa fa-check-square-o">&nbsp;</i>启用
+                </button>
+                <button class="layui-btn  layui-btn-danger" onclick="updateState('roleTable','/role/batchDelete','id','DELETE')">
+                    <i class="fa fa-expeditedssl">&nbsp;</i>禁用
+                </button>
+            </div>
+            <form class="layui-form" action="">
+                <label class="layui-form-label">角色名称:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="roleName" placeholder="请输入角色名称" class="layui-input">
+                </div>
+                <label class="layui-form-label">角色备注:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="roleRemk" placeholder="请输入角色备注" class="layui-input">
+                </div>
+                <label class="layui-form-label">状态:</label>
+                <div class="layui-input-inline">
+                    <select  pSelect="roleType" class="pSelect" id="status" lay-search>
+                    </select>
+                </div>
+            </form>
+                <button class="layui-btn search-btn"  data-type="reload">
+                    <i class="fa fa-search">&nbsp;</i>查询
+                </button>
+
+        </div>
+    </div>
+
+</div>
+<script type="text/html" id="roleBar">
+    <button class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius" lay-event="detail">详情</button>
+    <button class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius" lay-event="edit">编辑</button>
+</script>
+<table class="layui-hide layui-anim layui-anim-up" id="roleTable" lay-filter="roleTableFilter"></table>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<div th:include="include :: footer"></div>
+<script th:inline="none">
+    var table;
+    var form;
+    var renderTable;
+
+    layui.use(['table'], function(){
+        table = layui.table;
+        form = layui.form;
+        var $ = layui.jquery;
+        renderTable = function(){
+            table.render({
+                elem: '#roleTable'
+                ,url:'/role/list'
+                ,title:'角色表'
+                ,text:'暂无数据'
+                ,loading:true,//url时，进度条显示
+                totalRow:false,//合计行
+                toolbar:true,//若需要“列显示隐藏”、“导出”、“打印”等功能，则必须开启该参数
+                defaultToolbar:['filter', 'print', 'exports']//['filter', 'print', 'exports'
+                ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                ,cols: [[
+                     {type:'checkbox', fixed: 'left'}
+                    ,{field:'roleName', width:80, title: '角色名'}
+                    ,{field:'roleRemk', width:80, title: '角色备注', sort: true}
+                    ,{field:'createTime', title: '创建时间', sort: true}
+                    ,{field:'createUser', title: '创建者', sort: true}
+                    ,{field:'updateTime', title: '修改时间', sort: true}
+                    ,{field:'updateUser', title: '修改人', sort: true}
+                    ,{field:'delFlag', title: '状态', sort: true,templet: function(d){
+                        if(d.delFlag == 'NORMAL'){
+                            return "<span class='layui-btn layui-btn-sm layui-btn-normal layui-btn-radius'>正常</span>";
+                        }else{
+                            return "<span class='layui-btn layui-btn-sm layui-btn-danger layui-btn-radius'>禁用</span>";
+                        }
+                        }}
+                        ,{fixed: 'right', title:'操作', toolbar: '#roleBar', width:'10%'}
+                ]]
+                ,page: true
+                ,id: 'roleTable'
+            });
+        };
+        renderTable();
+        var $ = layui.$, active = {
+            reload: function(){
+                var roleName = $('#roleName');
+                var roleRemk = $('#roleRemk');
+                var status  = $('#status');
+
+                //执行重载
+                table.reload('roleTable', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        roleName: roleName.val(),
+                        roleRemk: roleRemk.val(),
+                        status: status.val()
+
+                    }
+                });
+            }
+        };
+        //给搜索按钮添加事件
+        $(".search-btn").on('click',function(){
+            active.reload();
+        });
+        //监听行工具事件
+        table.on('tool(roleTableFilter)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'detail'){
+                openNewWindow("/role/detail","详情",data.id);
+            } else if(obj.event === 'edit'){
+                openNewWindow("/role/edit","编辑",data.id);
+            }
+        });
+        //扫描 select 组件
+        scanSelTool();
+    });
+
+
+</script>
+</body>
+</html>

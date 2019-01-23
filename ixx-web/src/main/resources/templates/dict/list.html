@@ -1,0 +1,128 @@
+<html>
+<head>
+    <title>字典</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <head th:include="include :: header"></head>
+</head>
+<body>
+<div class="demoTable">
+    <div class="layui-form-item" style="margin-top: 10px;">
+        <div class="layui-input-normal">
+            <div class="layui-input-inline" style="width: 250px;">
+                <button class="layui-btn" onclick="addPage('/dict/addPage')">
+                    <i class="fa fa-plus">&nbsp;</i>增加
+                </button>
+                <button class="layui-btn layui-btn-green" onclick="updateState('dictTable','/dict/batchDelete','id','NORMAL')">
+                    <i class="fa fa-check-square-o">&nbsp;</i>启用
+                </button>
+                <button class="layui-btn  layui-btn-danger" onclick="updateState('dictTable','/dict/batchDelete','id','DELETE')">
+                    <i class="fa fa-expeditedssl">&nbsp;</i>禁用
+                </button>
+            </div>
+                <label class="layui-form-label">键:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" placeholder="请输入键" class="layui-input">
+                </div>
+                <label class="layui-form-label">值:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="value" placeholder="请输入值" class="layui-input">
+                </div>
+                <label class="layui-form-label">类型:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="type" placeholder="请输入类型" class="layui-input">
+                </div>
+                <button class="layui-btn search-btn">
+                    <i class="fa fa-search">&nbsp;</i>查询
+                </button>
+        </div>
+    </div>
+
+</div>
+<script type="text/html" id="dictBar">
+    <button class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius" lay-event="detail">详情</button>
+    <button class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius" lay-event="edit">编辑</button>
+</script>
+<table class="layui-hide layui-anim-up" id="dictTable" lay-filter="dictTableFilter"></table>
+<div th:include="include :: footer"></div>
+<script th:inline="none">
+    var table;
+    var renderTable;
+    layui.use(['table','jquery'], function(){
+        table = layui.table;
+        renderTable = function(){
+            table.render({
+                elem: '#dictTable'
+                ,url:'/dict/list'
+                ,loading:true
+                ,title:'字典表'
+                ,text:'暂无数据'
+                ,loading:true,//url时，进度条显示
+                totalRow:false,//合计行
+                toolbar:true,//若需要“列显示隐藏”、“导出”、“打印”等功能，则必须开启该参数
+                defaultToolbar:['filter', 'print', 'exports']//['filter', 'print', 'exports'
+                ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                ,cols: [[
+                    {type:'checkbox', fixed: 'left'}
+                    ,{field:'name', width:80, title: '键'}
+                    ,{field:'value', width:80, title: '值', sort: true}
+                    ,{field:'type', width:80, title: '类型'}
+                    ,{field:'description', title: '描述', width: '20%', minWidth: 100} //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                    ,{field:'createTime', title: '创建时间', sort: true}
+                    ,{field:'createUser', title: '创建者', sort: true}
+                    ,{field:'updateTime', title: '修改时间', sort: true}
+                    ,{field:'updateUser', title: '修改人', sort: true}
+                    ,{field:'remarks', title: '备注', sort: true}
+                    ,{field:'delFlag', title: '状态', sort: true,templet: function(d){
+                        if(d.delFlag == 'NORMAL'){
+                            return "<span class='layui-btn layui-btn-sm layui-btn-normal layui-btn-radius'>正常</span>";
+                        }else{
+                            return "<span class='layui-btn layui-btn-sm layui-btn-danger layui-btn-radius'>禁用</span>";
+                        }
+                        }}
+                        ,{fixed: 'right', title:'操作', toolbar: '#dictBar', width:'10%'}
+                ]]
+                ,page: true
+                ,id: 'dictTable'
+            });
+        };
+        renderTable();
+        var $ = layui.$, active = {
+            reload: function(){
+                var name = $('#name');
+                var value = $('#value');
+                var type  = $('#type');
+
+                //执行重载
+                table.reload('dictTable', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                            name: name.val(),
+                            value: value.val(),
+                            type: type.val()
+
+                    }
+                });
+            }
+        };
+        //给搜索按钮添加事件
+        $(".search-btn").on('click',function(){
+            active.reload();
+        });
+
+        //监听行工具事件
+        table.on('tool(dictTableFilter)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'detail'){
+                openNewWindow("/dict/detail","详情",data.id);
+            } else if(obj.event === 'edit'){
+                openNewWindow("/dict/edit","编辑",data.id);
+            }
+        });
+    });
+
+
+</script>
+</body>
+</html>

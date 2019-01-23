@@ -1,0 +1,96 @@
+<html>
+<head>
+    <title>字典-编辑</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/layui/css/font-awesome.min.css}">
+    <script th:src="@{/layui/plugins/ztree/jquery.ztree.all.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/layui/plugins/ztree/css/metroStyle/metroStyle.css}">
+    <head th:include="include :: header"></head>
+</head>
+<body>
+<div class="layui-col-md6 layui-col-md-offset1 layui-anim-up layui-text">
+    <fieldset class="layui-elem-field layui-field-title"><legend>编辑字典</legend></fieldset>
+    <!-- 此扩展能递归渲染一个权限树，点击深层次节点，父级节点中没有被选中的节点会被自动选中，单独点击父节点，子节点会全部 选中/去选中 -->
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">键</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="hidden"  name="id" th:value="${dictDo.id}"/>
+                <input class="layui-input" type="text"  name="name" lay-verify="required"  lay-verType="tips" th:value="${dictDo.name}"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">值</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="value" placeholder="请输入字典值" lay-verify="required"  lay-verType="tips" th:value="${dictDo.value}" maxlength="20"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">类型</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="type" placeholder="请输入字典类型" maxlength="50" lay-verify="required"  lay-verType="tips" th:value="${dictDo.type}"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="description" placeholder="请输入字典描述" maxlength="50" lay-verify="required"  lay-verType="tips" th:value="${dictDo.description}"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="tel" name="sort" placeholder="排序" maxlength="5" lay-verify="required"  lay-verType="tips" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" th:value="${dictDo.sort}"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="remarks" placeholder="请输入备注"  maxlength="100" lay-verify="required"  lay-verType="tips" th:value="${dictDo.remarks}"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" lay-filter="saveDict" lay-submit="">提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include :: footer"></div>
+<script  type="text/javascript" th:inline="none">
+
+    var flag = false;
+
+    layui.config({
+        base: "layui/js/"
+    }).use(['form', 'layer'], function () {
+        var form = layui.form,
+            layer = parent.layer === undefined ? layui.layer : parent.layer,
+            $ = layui.jquery;
+        form.on("submit(saveDict)", function (data) {
+            if(!flag){
+                flag = true;
+                $.ajax({
+                    type: "POST",
+                    url: "/dict/saveDict",
+                    data: data.field,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.code == 0) {
+                            pAlert();
+                            //刷新列表
+                            parent.renderTable();
+                            closeWin();
+                        } else {
+                            pEoor();
+                        }
+                        return true;
+                    }
+                });
+            }
+            return false;
+        })
+    });
+</script>
+</body>
+</html>

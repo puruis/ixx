@@ -1,0 +1,55 @@
+<html>
+<head>
+    <title>字典-详情</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/layui/css/font-awesome.min.css}">
+    <script src="@{/layui/plugins/ztree/jquery.ztree.all.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/layui/plugins/ztree/css/metroStyle/metroStyle.css}">
+    <head th:include="include :: header"></head>
+</head>
+<body>
+<div class="layui-col-md6 layui-col-md-offset1 layui-anim-up layui-text">
+    <fieldset class="layui-elem-field layui-field-title"><legend>详情</legend></fieldset>
+    <!-- 此扩展能递归渲染一个权限树，点击深层次节点，父级节点中没有被选中的节点会被自动选中，单独点击父节点，子节点会全部 选中/去选中 -->
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">键</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text"  name="name" th:value="${dictDo.name}" readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">值</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="value" th:value="${dictDo.value}" readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">类型</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="type" th:value="${dictDo.type}" readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="description" th:value="${dictDo.description}" readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="tel" name="sort"  th:value="${dictDo.sort}" readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="remarks" th:value="${dictDo.remarks}" readonly/>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include :: footer"></div>
+</body>
+</html>

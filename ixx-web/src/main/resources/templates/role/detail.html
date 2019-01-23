@@ -1,0 +1,77 @@
+<html>
+<head>
+    <title>角色-详情</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/layui/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/module/eleTree/eleTree.css}" media="all">
+    <script th:src="@{/layui/plugins/ztree/jquery.ztree.all.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/layui/plugins/ztree/css/metroStyle/metroStyle.css}">
+    <head th:include="include :: header"></head>
+</head>
+<body>
+<div class="layui-col-md6 layui-col-md-offset1 layui-anim layui-anim-up layui-text">
+    <fieldset class="layui-elem-field layui-field-title"><legend>角色详情</legend></fieldset>
+    <!-- 此扩展能递归渲染一个权限树，点击深层次节点，父级节点中没有被选中的节点会被自动选中，单独点击父节点，子节点会全部 选中/去选中 -->
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色名称:</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="hidden"  name="roleId" id="roleId" th:value="${roleDo.id}"/>
+                <input class="layui-input" type="text"  name="roleName" th:value="${roleDo.roleName}" readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色备注:</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="roleRemk" th:value="${roleDo.roleRemk}" readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">创建人:</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="type" th:value="${roleDo.createUser}" readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">修改人:</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="updateUser" th:value="${roleDo.updateUser}" readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单:</label>
+            <div class="layui-input-block">
+                <ul id="treeDemo" class="ztree"></ul>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include :: footer"></div>
+<script  th:inline="none">
+    $(function(){
+        var setting = {
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            check: {
+                enable: true,
+                chkboxType:{ "Y" : "ps", "N" : "ps" }
+            }
+        };
+
+        $.ajax({
+            type : "GET",
+            data:{
+                roleId:$("#roleId").val()
+            },
+            url : "/role/queryMenuListByRoleId",
+            success : function(data) {
+                $.fn.zTree.init($("#treeDemo"), setting, data.data);
+            }
+        });
+    });
+</script>
+</body>
+</html>

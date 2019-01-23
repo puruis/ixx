@@ -1,0 +1,94 @@
+<html>
+<head>
+    <title>用户-编辑</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/layui/css/font-awesome.min.css}">
+    <script th:src="@{/layui/plugins/ztree/jquery.ztree.all.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/layui/plugins/ztree/css/metroStyle/metroStyle.css}">
+    <head th:include="include :: header"></head>
+</head>
+<body>
+<div class="layui-col-md6 layui-col-md-offset1 layui-anim layui-anim-up layui-text">
+    <fieldset class="layui-elem-field layui-field-title"><legend>编辑用户</legend></fieldset>
+    <!-- 此扩展能递归渲染一个权限树，点击深层次节点，父级节点中没有被选中的节点会被自动选中，单独点击父节点，子节点会全部 选中/去选中 -->
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名称</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="hidden"  name="id" th:value="${userDo.id}" />
+                <input class="layui-input" type="text"  name="userName" th:value="${userDo.userName}" style="background-color: #eee"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户昵称</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="nickName" th:value="${userDo.nickName}" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">头像</label>
+            <div class="layui-input-block">
+                <img th:src="${userDo.photo}" width="50px" height="50px" style="border-radius: 25px;">
+                <input class="layui-input" type="hidden" name="photo" th:value="${userDo.photo}" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" lay-verify="email" name="email" th:value="${userDo.email}" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="hidden" id="selectValue"  th:value="${userDo.delFlag}" />
+                <select  pSelect="userStatus" class="pSelect"  id="pSelect" name="delFlag" lay-verify="required"  lay-verType="tips"  lay-search maxlength="20">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" lay-filter="saveUser" lay-submit="">提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include :: footer"></div>
+<script  type="text/javascript" th:inline="none">
+
+    var flag = false;
+    var form;
+    layui.config({
+        base: "layui/js/"
+    }).use(['form', 'layer'], function () {
+        form = layui.form;
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        form.on("submit(saveUser)", function (data) {
+            if(!flag){
+                flag = true;
+                $.ajax({
+                    type: "POST",
+                    url: "/user/saveUser",
+                    data: data.field,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.code == 0) {
+                            pAlert();
+                            //刷新列表
+                            parent.renderTable();
+                            closeWin();
+                        } else {
+                            pEoor();
+                        }
+                        return true;
+                    }
+                });
+            }
+            return false;
+        })
+        scanSelTool("edit");
+    });
+</script>
+</body>
+</html>

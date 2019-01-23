@@ -1,0 +1,71 @@
+server:
+  port: 8090
+
+adminUserId: 1
+
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+  datasource:
+    druid:
+      stat-view-servlet:
+        loginUsername: admin
+        loginPassword: 123456
+    dynamic:
+      druid: # 全局druid参数，绝大部分值和默认保持一致。(现已支持的参数如下,不清楚含义不要乱设置)
+        initial-size: 10
+        max-active: 200
+        min-idle: 10
+        max-wait: 1000
+        filters: stat,wall # 注意这个值和druid原生不一致，默认启动了stat,wall
+      datasource:
+        master:
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/ixx?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+          druid: # 以下参数针对每个库可以重新设置druid参数
+            initial-size: 11
+#        slave:
+#          username: root
+#          password: 1234qwer
+#          driver-class-name: com.mysql.jdbc.Driver
+#          url: jdbc:mysql://127.0.0.1:3306/db2?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+#          druid: # 以下参数针对每个库可以重新设置druid参数
+#            initial-size: 11
+
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    joda-date-time-format: yyyy-MM-dd HH:mm:ss
+  mail:
+    host: xxx
+    username: xxx
+    password: xxx
+mybatis-plus:
+  mapper-locations: classpath:/mybatisMapper/*.xml
+  typeAliasesPackage: com.ixx.domain
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+  type-enums-package: com.ixx.common.enumeration.*
+  global-config:
+    db-config:
+      id-type: uuid
+      field-strategy: not_null
+      #是否启用 大写名命
+      capital-mode: false
+redis:
+  database: 1
+  host: 127.0.0.1
+  port: 6379
+  password:
+  timeout: 5000
+  expire: 5000
+
+oss:
+  youpai:
+    uploadDir: test/
