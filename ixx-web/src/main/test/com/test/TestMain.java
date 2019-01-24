@@ -29,8 +29,6 @@ public class TestMain {
     @Autowired
     private ScheduleService scheduleService;
     @Autowired
-    private StudentService studentService;
-    @Autowired
     private UserService userService;
 
     @Test
@@ -49,9 +47,5 @@ public class TestMain {
         scheduleService.executScheduleWithFixedDelay(executorService,new IP2AddressThread());
     }
 
-    @Test
-    public void testMultipleDataSource(){
-        studentService.save();
-    }
 
 }

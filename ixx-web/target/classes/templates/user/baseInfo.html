@@ -98,6 +98,11 @@
         //让第一个文本框 获得焦点
         $("#nickName").focus();
         form.on("submit(saveBaseInfo)", function (data) {
+                if(data.delFlag == 'on'){
+                    data.field.delFlag = 'NORMAL'
+                }else{
+                    data.field.delFlag = 'DELETE'
+                }
                 $.ajax({
                     type: "POST",
                     url: "/user/saveUser",

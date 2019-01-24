@@ -1,0 +1,46 @@
+<html>
+<head>
+    <title>在线用户</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <head th:include="include :: header"></head>
+</head>
+<body>
+<div class="demoTable">
+</div>
+<table class="layui-hide layui-anim-up" id="onlineTable" lay-filter="onlineTableFilter"></table>
+<div th:include="include :: footer"></div>
+<script th:inline="none">
+    var table;
+    var renderTable;
+    layui.use(['table','jquery'], function(){
+        table = layui.table;
+        renderTable = function(){
+            table.render({
+                elem: '#onlineTable'
+                ,url:'/online/list'
+                ,title:'在线用户'
+                ,text:'暂无数据'
+                ,loading:true,//url时，进度条显示
+                totalRow:false,//合计行
+                toolbar:true,//若需要“列显示隐藏”、“导出”、“打印”等功能，则必须开启该参数
+                defaultToolbar:['filter', 'print', 'exports']//['filter', 'print', 'exports'
+                ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                ,cols: [[
+                    {type:'checkbox', fixed: 'left'}
+                    ,{field:'username', width:80, title: '用户名'}
+                    ,{field:'host', width:100, title: 'IP地址'}
+                    ,{field:'systemHost', width:100, title: '物理地址'}
+                    ,{field:'startTimestamp', title: '创建时间', sort: true}
+                    ,{field:'lastAccessTime', title: '最后访问时间', sort: true}
+                ]]
+                ,page: true
+                ,id: 'onlineTable'
+            });
+        };
+        renderTable();
+    });
+
+
+</script>
+</body>
+</html>

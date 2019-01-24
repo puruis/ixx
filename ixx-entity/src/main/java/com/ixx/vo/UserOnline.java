@@ -26,7 +26,7 @@ public class UserOnline implements Serializable {
     private String host;
 
     /**
-     * 用户登录时系统IP
+     * 物理地址
      */
     private String systemHost;
 

@@ -15,13 +15,13 @@ import java.util.UUID;
 @Component
 @Slf4j
 public class FileUploadService {
-    @Value("#{oss.youpai.bucketName}")
+    @Value("${oss.youpai.bucketName}")
     private String bucketName;
-    @Value("#{oss.youpai.userName}")
+    @Value("${oss.youpai.userName}")
     private String userName;
-    @Value("#{oss.youpai.password}")
+    @Value("${oss.youpai.password}")
     private String password;
-    @Value("#{oss.youpai.httpBase}")
+    @Value("${oss.youpai.httpBase}")
     private String httpBase;
 
 
