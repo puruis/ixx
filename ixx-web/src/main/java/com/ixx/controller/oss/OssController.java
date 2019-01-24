@@ -3,7 +3,7 @@ package com.ixx.controller.oss;
 import com.ixx.common.result.ResultJson;
 import com.ixx.entity.oss.FileDo;
 import com.ixx.service.FileService;
-import com.ixx.util.PaiFileUploadUtils;
+import com.ixx.service.FileUploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +30,12 @@ public class OssController {
 
     @Value("${oss.youpai.uploadDir}")
     private String uploadDir;
+    @Value("${oss.youpai.http}")
+    private String http;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private FileUploadService fileUploadService;
 
     @RequiresPermissions("oss:paiUploadFile")
     @ResponseBody
@@ -44,7 +48,7 @@ public class OssController {
             String fileName = UUID.randomUUID().toString();
             File file1 = File.createTempFile(fileName, type);
             file.transferTo(file1);
-            resultUrl = PaiFileUploadUtils.uploadFile(uploadDir, file1);
+            resultUrl = fileUploadService.uploadFile(uploadDir, file1);
 
             FileDo fileDo = new FileDo();
             fileDo.setFileName(fileName);
@@ -56,6 +60,6 @@ public class OssController {
         }catch (Exception e){
             log.error("又拍云文件上传失败:{}",e );
         }
-        return ResultJson.success("http://"+resultUrl);
+        return ResultJson.success(http+resultUrl);
     }
 }

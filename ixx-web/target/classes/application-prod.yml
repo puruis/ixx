@@ -33,7 +33,7 @@ spring:
 #          username: root
 #          password: 1234qwer
 #          driver-class-name: com.mysql.jdbc.Driver
-#          url: jdbc:mysql://39.96.15.6:3306/db2?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+#          url: jdbc:mysql://127.0.0.1:3306/db2?useUnicode=true&characterEncoding=utf8&autoReconnect=true
 #          druid: # 以下参数针对每个库可以重新设置druid参数
 #            initial-size: 11
 

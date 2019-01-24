@@ -1,24 +1,28 @@
-package com.ixx.util;
+package com.ixx.service;
 
 import com.UpYun;
 import lombok.extern.slf4j.Slf4j;
-
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.UUID;
-
 /**
- * Description: 又拍云 储存文件上传
+ * Description:文件上传服务
  * User: purui_zhang
- * Date: 2018-12-22
- * Time: 20:38
+ * Date: 2019-01-24
+ * Time: 15:40
  */
+@Component
 @Slf4j
-public class PaiFileUploadUtils {
-
-    private static final String BUCKETNAME = "";
-    private static final String USERNAME = "";
-    private static final String PASSWORD = "";
-    private static final String HTTPBASE = "";
+public class FileUploadService {
+    @Value("#{oss.youpai.bucketName}")
+    private String bucketName;
+    @Value("#{oss.youpai.userName}")
+    private String userName;
+    @Value("#{oss.youpai.password}")
+    private String password;
+    @Value("#{oss.youpai.httpBase}")
+    private String httpBase;
 
 
     /**
@@ -28,8 +32,8 @@ public class PaiFileUploadUtils {
      * @param file
      * @return
      */
-    public static String uploadFile(String folder,String fileName,File file){
-        UpYun upYun = new UpYun(BUCKETNAME, USERNAME, PASSWORD);
+    public String uploadFile(String folder,String fileName,File file){
+        UpYun upYun = new UpYun(bucketName, userName, password);
         upYun.setTimeout(60);
         //选择最优的接入点
         upYun.setApiDomain(UpYun.ED_AUTO);
@@ -42,7 +46,7 @@ public class PaiFileUploadUtils {
         }catch (Exception e){
             log.error("又拍云上传文件失败:{}",e);
         }
-        return HTTPBASE+folder+fileName;
+        return httpBase+folder+fileName;
     }
 
     /**
@@ -51,7 +55,7 @@ public class PaiFileUploadUtils {
      * @param file
      * @return
      */
-    public static String uploadFile(String folder,File file){
+    public String uploadFile(String folder,File file){
         String fileName = UUID.randomUUID().toString();
         String uploadFile = uploadFile(folder, fileName, file);
         return uploadFile;
@@ -62,8 +66,8 @@ public class PaiFileUploadUtils {
      * @param filePath
      * @return
      */
-    public static Boolean deleteFile(String filePath){
-        UpYun upYun = new UpYun(BUCKETNAME, USERNAME, PASSWORD);
+    public Boolean deleteFile(String filePath){
+        UpYun upYun = new UpYun(bucketName, userName, password);
         try {
             boolean b = upYun.deleteFile(filePath);
             return b;

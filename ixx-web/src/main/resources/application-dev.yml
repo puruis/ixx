@@ -69,3 +69,8 @@ redis:
 oss:
   youpai:
     uploadDir: test/
+    bucketName:
+    userName:
+    password:
+    httpBase:
+    http: http://

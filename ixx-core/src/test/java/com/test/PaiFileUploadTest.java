@@ -1,8 +1,5 @@
 package com.test;
 
-import com.ixx.util.PaiFileUploadUtils;
-
-import java.io.File;
 
 /**
  * Description:
@@ -11,6 +8,6 @@ import java.io.File;
  * Time: 20:52
  */
 public class PaiFileUploadTest {
-    public static void main(String[] args){    PaiFileUploadUtils.uploadFile("sf/test/",new File("D:\\click.png"));
+    public static void main(String[] args){
     }
 }
