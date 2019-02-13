@@ -26,7 +26,7 @@ spring:
           username: root
           password: 123456
           driver-class-name: com.mysql.jdbc.Driver
-          url: jdbc:mysql://127.0.0.1:3306/learing?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+          url: jdbc:mysql://localhost:3306/ixx?useUnicode=true&characterEncoding=utf8&autoReconnect=true
           druid: # 以下参数针对每个库可以重新设置druid参数
             initial-size: 11
 #        slave:
@@ -64,7 +64,13 @@ redis:
   port: 6379
   password:
   timeout: 5000
+  expire: 5000
 
 oss:
   youpai:
     uploadDir: test/
+    bucketName:
+    userName:
+    password:
+    httpBase:
+    http: http://
