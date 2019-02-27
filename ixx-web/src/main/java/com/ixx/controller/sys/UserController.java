@@ -90,7 +90,7 @@ public class UserController extends BaseController{
             }
             return ResultJson.success();
         } catch (AuthenticationException e) {
-            return ResultJson.fail("登录失败");
+            return ResultJson.fail(e.getMessage());
         }
     }
     @GetMapping(value = "index")
