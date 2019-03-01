@@ -38,8 +38,14 @@
 
     <!-- 操作列 -->
     <script type="text/html" id="menuBar">
-        <button class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius" lay-event="edit">编辑</button>
-        <button class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius" lay-event="del">删除</button>
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">
+            <i class="layui-icon layui-icon-edit"></i>&nbsp;
+            编辑
+        </a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">
+            <i class="layui-icon layui-icon-delete"></i>&nbsp;
+            删除
+        </a>
     </script>
     <div th:include="include :: footer"></div>
 <script th:src="@{/layui/plugins/ztree/jquery.ztree.all.min.js}"></script>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主页内容</title>
+    <head th:include="include :: header"></head>
+    <style>
+        .layui-fluid{
+            padding: 15px;
+            position: relative;
+            margin: 0 auto;
+        }
+        .layuiadmin-badge {
+            top: 50%;
+            margin-top: -9px;
+            color: #01AAED;
+        }
+        .layuiadmin-badge{
+            position: absolute;
+            right: 15px;
+        }
+        .layuiadmin-badge, .layuiadmin-btn-group, .layuiadmin-span-color {
+            position: absolute;
+            right: 15px;
+        }
+        .layuiadmin-span-color {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-sm6 layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    访问量
+                    <span class="layui-badge layui-bg-blue layuiadmin-badge">周</span>
+                </div>
+                <div class="layui-card-body">
+                    <p>9999999</p>
+                    <p>
+                        总计访问量
+                        <span class="layuiadmin-span-color">
+                            88万
+                            <i class="layui-inline layui-icon layui-icon-flag"></i>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:include="include :: footer"></div>
+</body>
+</html>

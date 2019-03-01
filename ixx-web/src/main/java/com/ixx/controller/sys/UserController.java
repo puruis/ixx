@@ -61,6 +61,12 @@ public class UserController extends BaseController{
         return "login";
     }
 
+
+    @GetMapping("/main")
+    String main() {
+        return "main";
+    }
+
     @Login
     @ResponseBody
     @PostMapping(value = "ajaxLogin")

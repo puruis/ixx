@@ -38,9 +38,9 @@
             <li class="layui-nav-item">
                 <a href="javascript:lockScreen();"><i class="fa fa-lock"></i>锁屏</a>
             </li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">通知<span class="layui-badge">9</span></a>
-            </li>
+            <!--<li class="layui-nav-item">-->
+                <!--<a href="javascript:;">通知<span class="layui-badge">9</span></a>-->
+            <!--</li>-->
             <li class="layui-nav-item">
                 <a href="javascript:;" th:text="${user.nickName}">
                     <!--<img src="statics/images/index/head.jpg" class="layui-nav-img">-->
@@ -86,7 +86,7 @@
 
 
         <div id="main">
-            <iframe scrolling="yes" frameborder="0" class="cy-show"></iframe>
+            <iframe scrolling="yes" frameborder="0" class="cy-show" th:src="@{/main}"></iframe>
         </div>
     </div>
 
